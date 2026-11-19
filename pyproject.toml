@@ -1,0 +1,63 @@
+# -*- coding: utf-8 -*-
+# 文件名：pyproject.toml
+# 文件描述: 包元数据、依赖分组与 Ruff、mypy、pytest 质量工具配置
+# 作者: 郑智文
+# 创建日期: 2026-11-19
+# 版本: 1.0
+# IDE: PyCharm
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "isa"
+version = "0.1.0"
+description = "《明日方舟》集成战略「黑流树海」知识库与有引用问答助手"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "郑智文" }]
+dependencies = []
+
+# 依赖按职责分组：模型运行库与数据库驱动单独安装，基础环境保持轻量。
+# 发行版本在对应实施任务中锁定，不在骨架阶段预写具体版本。
+[project.optional-dependencies]
+db = ["sqlalchemy>=2.0", "psycopg[binary]", "pgvector"]
+parsing = ["markdown-it-py"]
+lexical = ["jieba", "bm25s"]
+models = ["sentence-transformers"]
+validation = ["pydantic>=2"]
+dev = ["ruff", "mypy", "pytest"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/isa"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+# RUF001-RUF003：中文标点与全角字符属于文档正文，不作为歧义字符告警。
+# UP009：项目要求每个源文件保留统一的 UTF-8 编码声明头，不视为冗余声明。
+ignore = ["RUF001", "RUF002", "RUF003", "UP009"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["isa"]
+
+[tool.mypy]
+python_version = "3.12"
+mypy_path = "src"
+strict = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
