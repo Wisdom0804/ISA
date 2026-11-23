@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+# 文件名：.gitignore
+# 文件描述: Git 忽略规则
+# 作者: 郑智文
+# 创建日期: 2026-11-18
+# 版本: 1.0
+# IDE: PyCharm
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
